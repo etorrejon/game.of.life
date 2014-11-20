@@ -1,0 +1,20 @@
+// supplant function taken from Douglas Crockford's "Remedial Javascript"
+// http://javascript.crockford.com/remedial.html
+if (!String.prototype.supplant) {
+    String.prototype.supplant = function (o) {
+        return this.replace(
+            /\{([^{}]*)\}/g,
+            function (a, b) {
+                var r = o[b];
+                return typeof r === 'string' || typeof r === 'number' ? r : a;
+            }
+        );
+    };
+}
+
+if (!Math.toRadians) {
+  Math.toRadians = function (deg) {
+    return deg * Math.PI / 180;
+  };
+}
+

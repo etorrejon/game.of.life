@@ -1,0 +1,32 @@
+body {
+  font: normal 100% Helvetica, Arial, sans-serif; /* assume 100% equates to 16px */
+}
+
+canvas { 
+  border: solid 1px black; 
+}
+
+form {
+  margin: 1em 0;
+}
+
+h1 {
+  font-size: 1.5em; /* 24px / 16px */
+}
+
+label {
+  display: block;
+  margin-bottom: 0.125em; /* 2px / 16px */
+}
+
+#log { 
+  border: solid 1px black; 
+  height: 200px;
+  overflow-y: scroll;
+  padding: 0 .5em;
+  width: 49em; /* ( 800px / 16px ) - ( padding * 2 ) */
+}
+
+#log p {
+  font-size: .75em; /* 12px / 16px */
+}

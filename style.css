@@ -3,7 +3,7 @@ body {
 }
 
 canvas { 
-  border: solid 1px black; 
+  border: solid 0.1em black; 
 }
 
 form {
@@ -12,6 +12,10 @@ form {
 
 h1 {
   font-size: 1.5em; /* 24px / 16px */
+}
+
+h2 {
+  font-size: 1.25em; /* 20px / 16px */
 }
 
 label {

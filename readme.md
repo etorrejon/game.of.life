@@ -4,4 +4,12 @@ First attempt at implementing Conway's Game of Life
 
 Built using HTML5 canvas.
 
-Install [grunt](http://gruntjs.com) to run automation tasks (linting, automated tests).
+
+To run unit tests:
+
+```
+npm run test
+```
+
+**(you'll need NodeJS if you want to run the automated tests)**
+ 

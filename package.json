@@ -4,7 +4,8 @@
   "description": "Conway's Game of Life",
   "main": "game.of.life.js",
   "scripts": {
-    "test": "./node_modules/jasmine-node/bin/jasmine-node --verbose --noColor tests"
+    "test": "./node_modules/jasmine-node/bin/jasmine-node --verbose --color tests",
+    "autotest": "./node_modules/jasmine-node/bin/jasmine-node --verbose --color --autotest tests"
   },
   "author": "Eddie Torrejon",
   "license": "Creative Commons Attribution-Share Alike 4.0",

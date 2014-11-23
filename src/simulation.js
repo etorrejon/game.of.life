@@ -5,14 +5,13 @@ var simulation = function() {
   population = [];
   population_grid = Array.matrix(100, 100, null);
 
-
   that.get_tick_count = function () {
     return tick_count;
   };
 
   that.get_population_size = function() {
     var live_count = 0;
-    for(i = 0; i < population.length; i++) {
+    for(var i = 0; i < population.length; i++) {
       if(population[i] != null && population[i].is_alive()) {
         live_count += 1;
       }
@@ -22,7 +21,7 @@ var simulation = function() {
 
   that.get_dead_cell_count = function() {
     var dead_count = 0;
-    for(i = 0; i < population.length; i++) {
+    for(var i = 0; i < population.length; i++) {
       if(population[i] == null || !population[i].is_alive()) {
         dead_count += 1;
       }
@@ -36,7 +35,7 @@ var simulation = function() {
   }
 
   that.seed = function(cells) {
-    for(i = 0; i < cells.length; i++) {
+    for(var i = 0; i < cells.length; i++) {
       var newX = cells[i].x;
       var newY = cells[i].y;
       var newCell = cell(newX, newY);
@@ -47,21 +46,22 @@ var simulation = function() {
   }
 
   that.tick = function() {
-    print_world();
-
     var to_die = [];
 
-    for(i = 0; i < population.length; i++) {
+    for(var i = 0; i < population.length; i++) {
       if(!cell_should_live(population[i])) {
         to_die.push(population[i]);
       }
     }
 
-    for(i = 0; i < to_die.length; i++) {
+    for(var i = 0; i < to_die.length; i++) {
       to_die[i].die();
     }
     
     tick_count += 1;
+  }
+
+  that.debug = function() {
     print_world();
   }
 
@@ -72,8 +72,38 @@ var simulation = function() {
     if(has_right_neighbour(c)) neighbour_count += 1;
     if(has_top_neighbour(c)) neighbour_count += 1;
     if(has_bottom_neighbour(c)) neighbour_count += 1;
+    if(has_bottom_left_neighbour(c)) neighbour_count += 1;
+    if(has_bottom_right_neighbour(c)) neighbour_count += 1;
+    if(has_top_left_neighbour(c)) neighbour_count += 1;
+    if(has_top_right_neighbour(c)) neighbour_count += 1;
 
     return neighbour_count >= 2;
+  }
+
+  function has_top_left_neighbour(c) {
+    if(c.y() == 0) return false;
+    if(c.x() == 0) return false;
+    var neighbour = population_grid[c.x() - 1][c.y() - 1];
+    return neighbour != null && neighbour.is_alive();
+  }
+
+  function has_top_right_neighbour(c) {
+    if(c.y() == 0) return false;
+    var neighbour = population_grid[c.x() + 1][c.y() - 1];
+    return neighbour != null && neighbour.is_alive();
+  }
+
+  function has_bottom_left_neighbour(c) {
+    if(c.y() >= population_grid[0].length - 1) return false;
+    if(c.x() == 0) return false;
+    var neighbour = population_grid[c.x() - 1][c.y() + 1];
+    return neighbour != null && neighbour.is_alive();
+  }
+
+  function has_bottom_right_neighbour(c) {
+    if(c.y() >= population_grid[0].length - 1) return false;
+    var neighbour = population_grid[c.x() + 1][c.y() + 1];
+    return neighbour != null && neighbour.is_alive();
   }
 
   function has_left_neighbour(c) {
@@ -107,7 +137,7 @@ var simulation = function() {
     console.log('population: {p}'
                 .supplant({p: population.length}));
 
-    for(i = 0; i < population.length; i++) {
+    for(var i = 0; i < population.length; i++) {
       var c = population[i];
       var inGrid = is_cell_populated(c.x(), c.y());
       console.log('Member: {x}, {y} in grid? {g}'
@@ -126,6 +156,11 @@ var simulation = function() {
                 .supplant({v: has_bottom_neighbour(c).toString()}));
     console.log('has top neighbour? {v}'
                 .supplant({v: has_top_neighbour(c).toString()}));
+  }
+
+  function print_cell(c) {
+    console.log('cell ({x}, {y}) is alive? {a}'
+                .supplant({x: c.x(), y: c.y(), a: c.is_alive().toString()}));
   }
 
   return that;

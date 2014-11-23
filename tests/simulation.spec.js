@@ -71,7 +71,8 @@ describe("On simulation tick", function() {
     var survivor = {x: 2, y: 2};
     sim.seed([survivor, 
               {x: 2, y: 1},
-              {x: 3, y: 2}]);
+              {x: 1, y: 2}]);
+
     sim.tick();
 
     expect(sim.get_population_size()).toBe(1);
@@ -84,10 +85,26 @@ describe("On simulation tick", function() {
     var dead_cell_one = {x: 2, y: 1};
     var dead_cell_two = {x: 3, y: 2};
     sim.seed([survivor, dead_cell_one, dead_cell_two]);
+
     sim.tick();
 
     expect(sim.get_population_size()).toBe(1);
     expect(sim.get_dead_cell_count()).toBe(2);
+  });
+
+  it("Causes a cell with two dead neighbours to die", function() {
+    var sim = simulation();
+
+    var survivor = {x: 2, y: 2};
+    var dead_cell_one = {x: 2, y: 1};
+    var dead_cell_two = {x: 3, y: 2};
+    sim.seed([survivor, dead_cell_one, dead_cell_two]);
+
+    sim.tick();
+    sim.tick();
+
+    expect(sim.get_population_size()).toBe(0);
+    expect(sim.get_dead_cell_count()).toBe(3);
   });
   
 });

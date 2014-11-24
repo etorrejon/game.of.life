@@ -19,6 +19,11 @@ function getCurrentTick() {
   return _simulation.get_tick_count();
 }
 
+function resetSimulation() {
+  _simulation.reset();
+  draw(_simulation);
+}
+
 function toggleCellState(x, y) {
   if(_simulation.is_cell_empty(x, y)) {
     _simulation.populate_cell(x, y);
@@ -45,13 +50,9 @@ function prepareSimulation() {
   prepareCanvas();
   drawGrid();
 
-  var seed = [ {x: 0, y: 0}, 
-               {x: 0, y: 1}, 
-               {x: 2, y: 2}, 
-               {x: 1, y: 0} ];
   _simulation = simulation();
-  _simulation.seed(seed);
   _simulation.debug();
+
   draw(_simulation);
 }
 

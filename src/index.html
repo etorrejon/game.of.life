@@ -10,7 +10,6 @@
     <script src="./simulation.js"></script>
     <script src="./game.of.life.js"></script>
 
-
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
@@ -28,6 +27,7 @@
 
     <form>
       <input type="button" id="tick_button" name="tick_button" value="Tick" />
+      <input type="button" id="reset_button" name="reset_button" value="Reset" />
     </form>
 
     <p>
@@ -48,8 +48,17 @@
 
       $("#tick_button").click(function () {
         next_tick();
-        $("#current_tick").html(getCurrentTick());
+        updateCurrentTick();
       });
+
+      $("#reset_button").click(function () {
+        resetSimulation();
+        updateCurrentTick();
+      });
+
+      function updateCurrentTick() {
+        $("#current_tick").html(getCurrentTick());
+      }
     </script>
   
   </body>

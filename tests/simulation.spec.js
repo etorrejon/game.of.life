@@ -46,6 +46,17 @@ describe("A new simulation", function() {
     expect(sim.get_tick_count()).toBe(1);
   });
 
+  it("Can be reset", function() {
+    var sim = simulation();
+
+    sim.populate_cell(1, 1);
+
+    sim.reset();
+
+    expect(sim.get_tick_count()).toBe(0);
+    expect(sim.get_population_size()).toBe(0);
+  });
+
   it("Can distinguish a dead cell from an empty cell", function() {
     var sim = simulation();
     sim.seed([{x: 0, y: 0},

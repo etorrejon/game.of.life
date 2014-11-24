@@ -51,6 +51,12 @@ var simulation = function() {
     }   
   }
 
+  that.reset = function() {
+    tick_count = 0;
+    population = [];
+    population_grid = Array.matrix(80, 80, null);
+  };
+
   that.kill_cell = function(x, y) {
     population_grid[x][y].die();
   }
@@ -94,6 +100,7 @@ var simulation = function() {
   }
 
   // :: helper functions ::
+
   function cell_should_live(c) {
     var neighbour_count = 0;
     if(has_left_neighbour(c)) neighbour_count += 1;

@@ -34,6 +34,10 @@ var simulation = function() {
            population_grid[x][y].is_alive();
   }
 
+  that.kill_cell = function(x, y) {
+    population_grid[x][y].die();
+  }
+
   that.seed = function(cells) {
     for(var i = 0; i < cells.length; i++) {
       var newX = cells[i].x;
@@ -47,15 +51,22 @@ var simulation = function() {
 
   that.tick = function() {
     var to_die = [];
+    var to_resurrect = [];
 
     for(var i = 0; i < population.length; i++) {
-      if(!cell_should_live(population[i])) {
+      if(cell_should_live(population[i])) {
+        to_resurrect.push(population[i]);
+      } else {
         to_die.push(population[i]);
       }
     }
 
     for(var i = 0; i < to_die.length; i++) {
       to_die[i].die();
+    }
+
+    for(var i = 0; i < to_resurrect.length; i++) {
+      to_resurrect[i].resurrect();
     }
     
     tick_count += 1;
@@ -77,6 +88,9 @@ var simulation = function() {
     if(has_top_left_neighbour(c)) neighbour_count += 1;
     if(has_top_right_neighbour(c)) neighbour_count += 1;
 
+    if(!c.is_alive() && neighbour_count == 3) return true;
+    if(!c.is_alive()) return false;
+    if(neighbour_count > 3) return false;
     return neighbour_count >= 2;
   }
 
@@ -135,7 +149,7 @@ var simulation = function() {
     console.log('tick: {t}'
                 .supplant({t: tick_count}));
     console.log('population: {p}'
-                .supplant({p: population.length}));
+                .supplant({p: get_population_size()}));
 
     for(var i = 0; i < population.length; i++) {
       var c = population[i];

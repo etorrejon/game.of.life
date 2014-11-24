@@ -9,6 +9,10 @@ var cell = function(x, y) {
     is_alive = false;
   }
 
+  that.resurrect = function() {
+    is_alive = true;
+  }
+
   that.is_alive = function() {
     return is_alive;
   }

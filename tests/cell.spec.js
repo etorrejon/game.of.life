@@ -15,6 +15,15 @@ describe("A cell", function() {
     expect(c.is_alive()).toBe(false);
   });
 
+  it("Can resurrect", function() {
+    var c = cell();
+    c.die();
+
+    c.resurrect();
+
+    expect(c.is_alive()).toBe(true);
+  });
+
   it("Has an x value", function() {
     var c = cell(2, 3);
     

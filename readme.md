@@ -4,7 +4,7 @@ First attempt at implementing Conway's Game of Life
 
 Built using HTML5 canvas.
 
-Tests written using [Jasimine](http://jasmine.github.io/).
+Tests written using [Jasmine](http://jasmine.github.io/).
 
 To run unit tests:
 

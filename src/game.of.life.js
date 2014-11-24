@@ -15,6 +15,10 @@ $(function() {
   });
 });
 
+function getCurrentTick() {
+  return _simulation.get_tick_count();
+}
+
 function toggleCellState(x, y) {
   if(_simulation.is_cell_empty(x, y)) {
     _simulation.populate_cell(x, y);

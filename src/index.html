@@ -30,6 +30,10 @@
       <input type="button" id="tick_button" name="tick_button" value="Tick" />
     </form>
 
+    <p>
+      Current Tick: <span id="current_tick">0</span>
+    </p>
+
     <canvas id="game_of_life" width="800" height="700">
       <p>Sorry, your browser doesn't support HTML5 canvas!</p>
     </canvas>
@@ -44,6 +48,7 @@
 
       $("#tick_button").click(function () {
         next_tick();
+        $("#current_tick").html(getCurrentTick());
       });
     </script>
   

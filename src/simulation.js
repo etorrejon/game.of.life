@@ -43,6 +43,14 @@ var simulation = function() {
            population_grid[x][y].is_alive();
   }
 
+  that.populate_cell = function(x, y) {
+    if(is_cell_empty(x, y)) {
+      var new_cell = cell(x, y);
+      population_grid[x][y] = new_cell;
+      population.push(new_cell);
+    }   
+  }
+
   that.kill_cell = function(x, y) {
     population_grid[x][y].die();
   }
@@ -154,7 +162,7 @@ var simulation = function() {
   }
 
   function print_world() {
-    console.log('---------the world----------');
+    console.log('------------------the world----------------------');
     console.log('tick: {t}'
                 .supplant({t: tick_count}));
     console.log('population: {p}'
@@ -163,11 +171,16 @@ var simulation = function() {
     for(var i = 0; i < population.length; i++) {
       var c = population[i];
       var inGrid = is_cell_populated(c.x(), c.y());
-      console.log('Member: {x}, {y} in grid? {g}'
-                  .supplant({x: c.x(), y: c.y(), g: inGrid.toString()}));
+      console.log('cell [{x}, {y}] alive? {a} dead? {d} empty? {e}'
+                  .supplant({x: c.x(), 
+                             y: c.y(), 
+                             a: is_cell_populated(c.x(), c.y()).toString(),
+                             d: is_cell_dead(c.x(), c.y()).toString(),
+                             e: is_cell_empty(c.x(), c.y()).toString()})
+                 );
     }
 
-    console.log('---------------------------');
+    console.log('------------------------------------------------');
   }
 
   function print_neighbours(c) {

@@ -29,6 +29,15 @@ describe("A new simulation", function() {
     expect(sim.get_population_size()).toBe(1);
   }); 
 
+  it("Can populate a cell", function() {
+    var sim = simulation();
+
+    sim.populate_cell(1, 1);
+
+    expect(sim.get_population_size()).toBe(1);
+    expect(sim.is_cell_populated(1, 1)).toBe(true);
+  });
+
   it("Can tick", function() {
     var sim = simulation();
 

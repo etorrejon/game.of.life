@@ -3,8 +3,39 @@ var CELL_SIZE_IN_PIXELS = 10;
 var GRID_WIDTH_IN_CELLS = 80;
 var GRID_HEIGHT_IN_CELLS = 80;
 
+var _canvas;
 var _context;
 var _simulation;
+
+$(function() {
+  $('#game_of_life').mousedown(function(e) {
+    var cellCoordinates = windowToCellCoordinates(e.pageX, e.pageY);
+    toggleCellState(cellCoordinates.x, cellCoordinates.y);
+    draw(_simulation);
+  });
+});
+
+function toggleCellState(x, y) {
+  if(_simulation.is_cell_empty(x, y)) {
+    _simulation.populate_cell(x, y);
+  } else if(_simulation.is_cell_alive(x, y)) {
+    _simulation.kill_cell(x, y);
+  } else {
+    _simulation.resurrect_cell(x, y);
+  }
+}
+
+function windowToCellCoordinates(x, y) {
+  var bounding_box = _canvas.getBoundingClientRect();
+
+  var canvas_x = x - bounding_box.left * (_canvas.width / bounding_box.width);
+  var cell_x = Math.floor( ( canvas_x / CELL_SIZE_IN_PIXELS ) - 0.5 );
+
+  var canvas_y = y - bounding_box.top * (_canvas.height / bounding_box.height);
+  var cell_y = Math.floor( ( canvas_y / CELL_SIZE_IN_PIXELS ) - 0.5 );
+
+  return {x: cell_x, y: cell_y };
+}
 
 function prepareSimulation() {
   prepareCanvas();
@@ -21,20 +52,17 @@ function prepareSimulation() {
 }
 
 function next_tick() {
-  console.log('next tick...');
   _simulation.tick();
   _simulation.debug();
-  console.log('tick complete, redrawing...');
   draw(_simulation);
-  console.log('I drawered it...');
 }
 
 function prepareCanvas() {
-  var canvas = document.getElementById(CANVAS_ELEMENT_ID);
-  canvas.width = GRID_WIDTH_IN_CELLS * CELL_SIZE_IN_PIXELS;
-  canvas.height = GRID_HEIGHT_IN_CELLS * CELL_SIZE_IN_PIXELS;
+  _canvas = document.getElementById(CANVAS_ELEMENT_ID);
+  _canvas.width = GRID_WIDTH_IN_CELLS * CELL_SIZE_IN_PIXELS;
+  _canvas.height = GRID_HEIGHT_IN_CELLS * CELL_SIZE_IN_PIXELS;
 
-  _context = canvas.getContext('2d');
+  _context = _canvas.getContext('2d');
   _context.translate(0.5, 0.5); // shifts lines half a pixel - to avoid blurry lines
   _context.strokeStyle = "#eee";
 }

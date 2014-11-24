@@ -11,5 +11,5 @@ To run unit tests:
 npm run test
 ```
 
-**(you'll need NodeJS if you want to run the automated tests)**
+*(you'll need NodeJS if you want to run the automated tests)*
  

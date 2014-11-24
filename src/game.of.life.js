@@ -1,23 +1,35 @@
-var CANVAS_ELEMENT_ID = 'game_of_life';
+var CANVAS_ELEMENT_ID = "game_of_life";
 var CELL_SIZE_IN_PIXELS = 10;
 var GRID_WIDTH_IN_CELLS = 80;
 var GRID_HEIGHT_IN_CELLS = 80;
 
 var _context;
-var _cells = [];
+var _simulation;
 
-function startSimulation() {
-  initializeSimulation(); 
-  var seed = [ {x: 0, y: 0}, {x: 0, y: 1}, {x: 0, y: 2} ];
-  populateCells(seed);
-}
-
-function initializeSimulation(gridSize) {
-  initializeCanvas();
+function prepareSimulation() {
+  prepareCanvas();
   drawGrid();
+
+  var seed = [ {x: 0, y: 0}, 
+               {x: 0, y: 1}, 
+               {x: 2, y: 2}, 
+               {x: 1, y: 0} ];
+  _simulation = simulation();
+  _simulation.seed(seed);
+  _simulation.debug();
+  draw(_simulation);
 }
 
-function initializeCanvas() {
+function next_tick() {
+  console.log('next tick...');
+  _simulation.tick();
+  _simulation.debug();
+  console.log('tick complete, redrawing...');
+  draw(_simulation);
+  console.log('I drawered it...');
+}
+
+function prepareCanvas() {
   var canvas = document.getElementById(CANVAS_ELEMENT_ID);
   canvas.width = GRID_WIDTH_IN_CELLS * CELL_SIZE_IN_PIXELS;
   canvas.height = GRID_HEIGHT_IN_CELLS * CELL_SIZE_IN_PIXELS;
@@ -46,20 +58,43 @@ function drawGrid() {
   }
 }
 
-function populateCells(cellPositions) {
-  var i;
-  for(i = 0; i < cellPositions.length; i++) {
-    populateCell(cellPositions[i]);
+function draw(sim) {
+  drawGrid();
+  for(var i = 0; i < GRID_WIDTH_IN_CELLS; i++) {
+    for(var j = 0; j < GRID_HEIGHT_IN_CELLS; j++) {
+      if(sim.is_cell_populated(i, j)) {
+        fillCell(i, j);
+      }
+      else if(sim.is_cell_dead(i, j)) {
+        fillDeadCell(i, j);
+      }
+      else {
+        clearCell(i, j);
+      }
+    }
   }
 }
 
-function populateCell(position) {
-  _cells[_cells.length] = position;
-  var xCoordinate = position.x * CELL_SIZE_IN_PIXELS;
-  var yCoordinate = position.y * CELL_SIZE_IN_PIXELS;
+function fillCell(x, y) {
+  var xCoordinate = x * CELL_SIZE_IN_PIXELS;
+  var yCoordinate = y * CELL_SIZE_IN_PIXELS;
   _context.fillRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
 }
 
+function fillDeadCell(x, y) {
+  var xCoordinate = x * CELL_SIZE_IN_PIXELS;
+  var yCoordinate = y * CELL_SIZE_IN_PIXELS;
+  _context.save();
+  _context.fillStyle = "#999";
+  _context.fillRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
+  _context.restore();
+}
+
+function clearCell(x, y) {
+  var xCoordinate = x * CELL_SIZE_IN_PIXELS;
+  var yCoordinate = y * CELL_SIZE_IN_PIXELS;
+  _context.clearRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
+}
 
 function log(message) {
   $("#log").prepend( "<p>{m}</p>".supplant({m: message}) ); 

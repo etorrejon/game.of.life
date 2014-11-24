@@ -3,7 +3,7 @@ var simulation = function() {
   that = this;
   tick_count = 0;
   population = [];
-  population_grid = Array.matrix(100, 100, null);
+  population_grid = Array.matrix(80, 80, null);
 
   that.get_tick_count = function () {
     return tick_count;
@@ -27,6 +27,15 @@ var simulation = function() {
       }
     }
     return dead_count;
+  }
+
+  that.is_cell_dead = function(x, y) {
+    return population_grid[x][y] != null &&
+           !population_grid[x][y].is_alive();
+  }
+
+  that.is_cell_empty = function(x, y) {
+    return population_grid[x][y] == null;
   }
 
   that.is_cell_populated = function(x, y) {

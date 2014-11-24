@@ -36,6 +36,22 @@ describe("A new simulation", function() {
 
     expect(sim.get_tick_count()).toBe(1);
   });
+
+  it("Can distinguish a dead cell from an empty cell", function() {
+    var sim = simulation();
+    sim.seed([{x: 0, y: 0},
+              {x: 1, y: 1}]);
+
+    sim.kill_cell(1, 1);
+
+    expect(sim.is_cell_populated(0, 0)).toBe(true);
+    expect(sim.is_cell_dead(0, 0)).toBe(false);
+    expect(sim.is_cell_empty(0, 0)).toBe(false);
+    expect(sim.is_cell_populated(1, 1)).toBe(false);
+    expect(sim.is_cell_dead(1, 1)).toBe(true);
+    expect(sim.is_cell_empty(1, 1)).toBe(false);
+    expect(sim.is_cell_empty(2, 2)).toBe(true);
+  });
 });
 
 describe("On simulation tick", function() {
@@ -58,7 +74,7 @@ describe("On simulation tick", function() {
 
     expect(sim.get_population_size()).toBe(0);
     expect(sim.get_dead_cell_count()).toBe(3);
-  });
+  }); 
 
   it("Causes any cell with no neighbours to die", function() {
     var sim = simulation();

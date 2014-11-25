@@ -15,10 +15,10 @@ describe("A new simulation", function() {
     expect(sim.get_population_size()).toBe(0);
   });
 
-  it("Has an initial dead cell count of zero", function() {
+  it("Has only dead cells", function() {
     var sim = simulation();
 
-    expect(sim.get_dead_cell_count()).toBe(0);
+    expect(sim.get_dead_cell_count()).toBe(80 * 80);
   });
 
   it("Accepts a seed", function() {
@@ -70,7 +70,7 @@ describe("A new simulation", function() {
     expect(sim.is_cell_populated(1, 1)).toBe(false);
     expect(sim.is_cell_dead(1, 1)).toBe(true);
     expect(sim.is_cell_empty(1, 1)).toBe(false);
-    expect(sim.is_cell_empty(2, 2)).toBe(true);
+    expect(sim.is_cell_empty(2, 2)).toBe(false);
   });
 });
 
@@ -93,10 +93,10 @@ describe("On simulation tick", function() {
     sim.tick();
 
     expect(sim.get_population_size()).toBe(0);
-    expect(sim.get_dead_cell_count()).toBe(3);
+    expect(sim.get_dead_cell_count()).toBe(80 * 80);
   }); 
 
-  it("Causes any cell with no neighbours to die", function() {
+  it("Causes any cell with no live neighbours to die", function() {
     var sim = simulation();
     sim.seed([{x: 0, y: 0}, 
               {x: 10, y: 10}, 
@@ -106,7 +106,7 @@ describe("On simulation tick", function() {
     expect(sim.get_population_size()).toBe(0);
   });
 
-  it("Causes a cell with only one neighbour to die", function() {
+  it("Causes a cell with only one live neighbour to die", function() {
     var sim = simulation();
     sim.seed([{x: 0, y: 0}, {x: 0, y: 1}]);
     
@@ -115,12 +115,12 @@ describe("On simulation tick", function() {
     expect(sim.get_population_size()).toBe(0);
   });
 
-  it("Allows a cell with two neighbours to live", function() {
+  it("Allows a cell with two live neighbours to survive", function() {
     var sim = simulation();
-    var survivor = {x: 3, y: 2};
+    var survivor = {x: 1, y: 1};
     sim.seed([survivor, 
-              {x: 2, y: 2},
-              {x: 4, y: 2}]);
+              {x: 0, y: 0},
+              {x: 2, y: 2}]);
 
     sim.tick();
 
@@ -128,7 +128,7 @@ describe("On simulation tick", function() {
     expect(sim.is_cell_populated(survivor.x, survivor.y)).toBe(true);
   });
 
-  it("Allows a cell with diagonal neighbours to live", function() {
+  it("Allows a cell with two live diagonal neighbours to survive", function() {
     var sim = simulation();
     var survivor = {x: 2, y: 2};
     sim.seed([survivor, 
@@ -142,30 +142,17 @@ describe("On simulation tick", function() {
   });
 
   it("Causes a cell with more than three live neighbours to die", function() {
+    var will_die = {x: 1, y: 2};
     var sim = simulation();
-    sim.seed([{x: 1, y: 0}, 
-              {x: 0, y: 1}, 
-              {x: 1, y: 1}, 
+    sim.seed([{x: 1, y: 1}, 
+              will_die, 
               {x: 2, y: 1}, 
-              {x: 1, y: 2}]);
+              {x: 2, y: 2}, 
+              {x: 0, y: 3}]);
 
     sim.tick();
 
-    expect(sim.get_population_size()).toBe(4);
-    expect(sim.is_cell_populated(1, 1)).toBe(false);
-  });
-
-  it("Causes a cell with two dead neighbours to die", function() {
-    var sim = simulation();
-    sim.seed([{x: 2, y: 2}, 
-              {x: 2, y: 1}, 
-              {x: 2, y: 3}]);
-
-    sim.tick();
-    sim.tick();
-
-    expect(sim.get_population_size()).toBe(0);
-    expect(sim.get_dead_cell_count()).toBe(3);
+    expect(sim.is_cell_populated(will_die.x, will_die.y)).toBe(false);
   });
 
   it("Causes a dead cell with three live neighbours to come back to life", function() {
@@ -196,11 +183,10 @@ describe("On simulation tick", function() {
     sim.tick();
 
     expect(sim.get_population_size()).toBe(4);
-    expect(sim.get_dead_cell_count()).toBe(0);
     assert_cells_are_visible(sim, seed);
   });
 
-  it("Beehive is a still life", function() {
+  it("A beehive is a still life", function() {
     var seed = [{x: 2, y: 1}, 
                 {x: 3, y: 1}, 
                 {x: 1, y: 2}, 
@@ -214,7 +200,6 @@ describe("On simulation tick", function() {
     sim.tick();
 
     expect(sim.get_population_size()).toBe(6);
-    expect(sim.get_dead_cell_count()).toBe(0);
     assert_cells_are_visible(sim, seed);
   });
 
@@ -234,7 +219,6 @@ describe("On simulation tick", function() {
     }
 
     expect(sim.get_population_size()).toBe(6);
-    expect(sim.get_dead_cell_count()).toBe(0);
     assert_cells_are_visible(sim, seed);
   });
 

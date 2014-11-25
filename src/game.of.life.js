@@ -10,7 +10,7 @@ var _simulation;
 $(function() {
   $('#game_of_life').mousedown(function(e) {
     var cellCoordinates = windowToCellCoordinates(e.pageX, e.pageY);
-    toggleCellState(cellCoordinates.x, cellCoordinates.y);
+    populateCell(cellCoordinates.x, cellCoordinates.y);
     draw(_simulation);
   });
 });
@@ -24,14 +24,8 @@ function resetSimulation() {
   draw(_simulation);
 }
 
-function toggleCellState(x, y) {
-  if(_simulation.is_cell_empty(x, y)) {
-    _simulation.populate_cell(x, y);
-  } else if(_simulation.is_cell_alive(x, y)) {
-    _simulation.kill_cell(x, y);
-  } else {
-    _simulation.resurrect_cell(x, y);
-  }
+function populateCell(x, y) {
+  _simulation.populate_cell(x, y);
 }
 
 function windowToCellCoordinates(x, y) {
@@ -118,7 +112,7 @@ function fillDeadCell(x, y) {
   var xCoordinate = x * CELL_SIZE_IN_PIXELS;
   var yCoordinate = y * CELL_SIZE_IN_PIXELS;
   _context.save();
-  _context.fillStyle = "#999";
+  _context.fillStyle = "#fff";
   _context.fillRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
   _context.restore();
 }

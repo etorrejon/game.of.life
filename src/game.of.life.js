@@ -8,24 +8,30 @@ var _context;
 var _simulation;
 
 $(function() {
-  $('#game_of_life').mousedown(function(e) {
-    var cellCoordinates = windowToCellCoordinates(e.pageX, e.pageY);
-    populateCell(cellCoordinates.x, cellCoordinates.y);
-    draw(_simulation);
-  });
+  prepareSimulation();
 });
 
-function getCurrentTick() {
-  return _simulation.get_tick_count();
-}
+$('#game_of_life').mousedown(function(e) {
+  var cellCoordinates = windowToCellCoordinates(e.pageX, e.pageY);
+  _simulation.populate_cell(cellCoordinates.x, cellCoordinates.y);
+  draw(_simulation);
+  updateStatus();
+});
 
-function resetSimulation() {
+$("#tick_button").click(function () {
+  next_tick();
+  updateStatus();
+});
+
+$("#reset_button").click(function () {
   _simulation.reset();
   draw(_simulation);
-}
+  updateStatus();
+});
 
-function populateCell(x, y) {
-  _simulation.populate_cell(x, y);
+function updateStatus() {
+  $("#current_tick").html(_simulation.get_tick_count());
+  $("#current_population").html(_simulation.get_population_size());
 }
 
 function windowToCellCoordinates(x, y) {
@@ -89,15 +95,8 @@ function draw(sim) {
   drawGrid();
   for(var i = 0; i < GRID_WIDTH_IN_CELLS; i++) {
     for(var j = 0; j < GRID_HEIGHT_IN_CELLS; j++) {
-      if(sim.is_cell_populated(i, j)) {
-        fillCell(i, j);
-      }
-      else if(sim.is_cell_dead(i, j)) {
-        fillDeadCell(i, j);
-      }
-      else {
-        clearCell(i, j);
-      }
+      if(sim.is_cell_populated(i, j)) fillCell(i, j);
+      if(sim.is_cell_dead(i, j)) clearCell(i, j);
     }
   }
 }
@@ -106,15 +105,6 @@ function fillCell(x, y) {
   var xCoordinate = x * CELL_SIZE_IN_PIXELS;
   var yCoordinate = y * CELL_SIZE_IN_PIXELS;
   _context.fillRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
-}
-
-function fillDeadCell(x, y) {
-  var xCoordinate = x * CELL_SIZE_IN_PIXELS;
-  var yCoordinate = y * CELL_SIZE_IN_PIXELS;
-  _context.save();
-  _context.fillStyle = "#fff";
-  _context.fillRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
-  _context.restore();
 }
 
 function clearCell(x, y) {

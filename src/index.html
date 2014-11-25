@@ -3,13 +3,6 @@
   <head>
     <meta charset="UTF-8">
     <title>Conway's Game of Life</title>
-
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <script src="./utilities.js"></script>
-    <script src="./cell.js"></script>
-    <script src="./simulation.js"></script>
-    <script src="./game.of.life.js"></script>
-
     <link rel="stylesheet" href="./style.css">
   </head>
   <body>
@@ -34,6 +27,10 @@
       Current Tick: <span id="current_tick">0</span>
     </p>
 
+    <p>
+      Current Population: <span id="current_population">0</span>
+    </p>
+
     <canvas id="game_of_life" width="800" height="700">
       <p>Sorry, your browser doesn't support HTML5 canvas!</p>
     </canvas>
@@ -41,25 +38,11 @@
     <div id="log">
     </div>
 
-    <script>
-      $(function() {
-        prepareSimulation();
-      });
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="./utilities.js"></script>
+    <script src="./cell.js"></script>
+    <script src="./simulation.js"></script>
+    <script src="./game.of.life.js"></script>
 
-      $("#tick_button").click(function () {
-        next_tick();
-        updateCurrentTick();
-      });
-
-      $("#reset_button").click(function () {
-        resetSimulation();
-        updateCurrentTick();
-      });
-
-      function updateCurrentTick() {
-        $("#current_tick").html(getCurrentTick());
-      }
-    </script>
-  
   </body>
 </html>

@@ -64,8 +64,6 @@ var simulation = function() {
     for(var i = 0; i < cells.length; i++) {
       var newX = cells[i].x;
       var newY = cells[i].y;
-      var newCell = cell(newX, newY);
-
       population_grid[newX][newY].resurrect();
     }
   }

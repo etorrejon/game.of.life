@@ -112,16 +112,7 @@ var clearCell = function clearCell(x, y) {
   _context.clearRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
 }
 
-var log = function log(message) {
-  $("#log").prepend( "<p>{m}</p>".supplant({m: message}) ); 
-}
-
 var drawLine = function drawLine(startPoint, endPoint) {
-  log("drawing line from ({x1}, {y1}) to ({x2}, {y2})".supplant({ x1: startPoint.x + 0.5, 
-                                                                  y1: startPoint.y + 0.5, 
-                                                                  x2: endPoint.x + 0.5, 
-                                                                  y2: endPoint.y + 0.5}));
-
   _context.beginPath();
   _context.moveTo(startPoint.x, startPoint.y);
   _context.lineTo(endPoint.x, endPoint.y);

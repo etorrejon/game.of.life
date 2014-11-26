@@ -1,6 +1,10 @@
-var simulation = function() {
-  var that, tick_count, population, population_grid;
+var simulation = function(width, height) {
+  var that, tick_count, population, population_grid, grid_width, grid_height;
   that = this;
+  tick_count = 0;
+  population = [];
+  grid_width = width;
+  grid_height = height;
 
   that.get_tick_count = function () {
     return tick_count;
@@ -24,6 +28,14 @@ var simulation = function() {
       }
     }
     return dead_count;
+  }
+
+  that.get_width = function() {
+    return width;
+  }
+
+  that.get_height = function() {
+    return height;
   }
 
   that.is_cell_dead = function(x, y) {
@@ -101,7 +113,7 @@ var simulation = function() {
   }
 
   var initialize_grid = function initialize_grid() {
-    population_grid = Array.matrix(80, 80, null);
+    population_grid = Array.matrix(grid_width, grid_height, null);
 
     for(var i = 0; i < population_grid.length; i++) {
       for(var j = 0; j < population_grid[0].length; j++) {
@@ -214,8 +226,6 @@ var simulation = function() {
   }
 
   // :: initialize state ::
-  tick_count = 0;
-  population = [];
   initialize_grid();
 
   return that;

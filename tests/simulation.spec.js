@@ -3,26 +3,36 @@ eval(require('fs').readFileSync('src/cell.js','utf8'));
 eval(require('fs').readFileSync('src/simulation.js','utf8'));
 
 describe("A new simulation", function() {
+  it("Accepts grid dimensions", function() {
+    var width = 50;
+    var height = 80;
+
+    var sim = simulation(width, height);
+
+    expect(sim.get_width()).toBe(width);
+    expect(sim.get_height()).toBe(height);
+  });
+
   it("Has an initial tick count of zero", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
 
     expect(sim.get_tick_count()).toBe(0);
   });
 
   it("Has an initial population of zero", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
 
     expect(sim.get_population_size()).toBe(0);
   });
 
   it("Has only dead cells", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
 
-    expect(sim.get_dead_cell_count()).toBe(80 * 80);
+    expect(sim.get_dead_cell_count()).toBe(50 * 50);
   });
 
   it("Accepts a seed", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
 
     sim.seed([{x: 0, y:0}]);
 
@@ -30,7 +40,7 @@ describe("A new simulation", function() {
   }); 
 
   it("Can populate a cell", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
 
     sim.populate_cell(1, 1);
 
@@ -39,7 +49,7 @@ describe("A new simulation", function() {
   });
 
   it("Can tick", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
 
     sim.tick();
 
@@ -47,7 +57,7 @@ describe("A new simulation", function() {
   });
 
   it("Can be reset", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
 
     sim.populate_cell(1, 1);
 
@@ -58,7 +68,7 @@ describe("A new simulation", function() {
   });
 
   it("Can distinguish a dead cell from an empty cell", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
     sim.seed([{x: 0, y: 0},
               {x: 1, y: 1}]);
 
@@ -76,7 +86,7 @@ describe("A new simulation", function() {
 
 describe("On simulation tick", function() {
   it("Causes a solitary cell to die", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
     sim.seed([{x: 0, y:0}]);
     sim.tick();
 
@@ -84,7 +94,9 @@ describe("On simulation tick", function() {
   });
 
   it("Keeps track of dead cells", function() {
-    var sim = simulation();
+    var width = 50;
+    var height = 50;
+    var sim = simulation(width, height);
     var dead_cell_one = {x: 4, y: 4};
     var dead_cell_two = {x: 12, y: 1};
     var dead_cell_three = {x: 2, y: 2};
@@ -93,11 +105,11 @@ describe("On simulation tick", function() {
     sim.tick();
 
     expect(sim.get_population_size()).toBe(0);
-    expect(sim.get_dead_cell_count()).toBe(80 * 80);
+    expect(sim.get_dead_cell_count()).toBe(width * height);
   }); 
 
   it("Causes any cell with no live neighbours to die", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
     sim.seed([{x: 0, y: 0}, 
               {x: 10, y: 10}, 
               {x: 4, y: 6}]);
@@ -107,7 +119,7 @@ describe("On simulation tick", function() {
   });
 
   it("Causes a cell with only one live neighbour to die", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
     sim.seed([{x: 0, y: 0}, {x: 0, y: 1}]);
     
     sim.tick();
@@ -116,7 +128,7 @@ describe("On simulation tick", function() {
   });
 
   it("Allows a cell with two live neighbours to survive", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
     var survivor = {x: 1, y: 1};
     sim.seed([survivor, 
               {x: 0, y: 0},
@@ -129,7 +141,7 @@ describe("On simulation tick", function() {
   });
 
   it("Allows a cell with two live diagonal neighbours to survive", function() {
-    var sim = simulation();
+    var sim = simulation(50, 50);
     var survivor = {x: 2, y: 2};
     sim.seed([survivor, 
               {x: 3, y: 3},
@@ -143,7 +155,7 @@ describe("On simulation tick", function() {
 
   it("Causes a cell with more than three live neighbours to die", function() {
     var will_die = {x: 1, y: 2};
-    var sim = simulation();
+    var sim = simulation(50, 50);
     sim.seed([{x: 1, y: 1}, 
               will_die, 
               {x: 2, y: 1}, 
@@ -161,7 +173,7 @@ describe("On simulation tick", function() {
                 {x: 0, y: 1}, 
                 zombie_cell, 
                 {x: 0, y: 2}];
-    var sim = simulation();
+    var sim = simulation(50, 50);
     sim.seed(seed);
     sim.kill_cell(zombie_cell.x, zombie_cell.y);
 
@@ -176,7 +188,7 @@ describe("On simulation tick", function() {
                   {x: 2, y: 3}, 
                   {x: 3, y: 2}, 
                   {x: 3, y: 3}];
-    var sim = simulation();
+    var sim = simulation(50, 50);
     sim.seed(seed);
 
     sim.tick();
@@ -193,7 +205,7 @@ describe("On simulation tick", function() {
                 {x: 4, y: 2}, 
                 {x: 2, y: 3}, 
                 {x: 3, y: 3}];
-    var sim = simulation();
+    var sim = simulation(50, 50);
     sim.seed(seed);
 
     sim.tick();
@@ -211,7 +223,7 @@ describe("On simulation tick", function() {
                 {x: 2, y: 3}, 
                 {x: 3, y: 3}]
 
-    var sim = simulation();
+    var sim = simulation(50, 50);
     sim.seed(seed);
 
     for(var i = 0; i < 100; i++) {

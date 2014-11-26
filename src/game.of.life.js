@@ -1,7 +1,7 @@
 var CANVAS_ELEMENT_ID = "game_of_life";
 var CELL_SIZE_IN_PIXELS = 10;
 var GRID_WIDTH_IN_CELLS = 80;
-var GRID_HEIGHT_IN_CELLS = 80;
+var GRID_HEIGHT_IN_CELLS = 40;
 
 var _canvas;
 var _context;
@@ -49,11 +49,10 @@ function windowToCellCoordinates(x, y) {
 }
 
 var prepareSimulation = function prepareSimulation() {
-  prepareCanvas();
-
-  _simulation = simulation();
+  _simulation = simulation(GRID_WIDTH_IN_CELLS, GRID_HEIGHT_IN_CELLS);
   _simulation.debug();
 
+  prepareCanvas();
   updateView();
 }
 
@@ -77,14 +76,14 @@ var drawGrid = function drawGrid() {
   var gridWidth = GRID_WIDTH_IN_CELLS * CELL_SIZE_IN_PIXELS;
   var gridHeight = GRID_HEIGHT_IN_CELLS * CELL_SIZE_IN_PIXELS;
 
-  for(var i = 0; i < GRID_HEIGHT_IN_CELLS; i++) {
+  for(var i = 0; i < GRID_WIDTH_IN_CELLS; i++) {
     var start_offset = CELL_SIZE_IN_PIXELS * i;
     var verticalStartPoint = { x: start_offset, y: 0 };
     var verticalEndPoint = { x: start_offset, y: gridHeight };
     drawLine(verticalStartPoint, verticalEndPoint);
   }
 
-  for(var i = 0; i < GRID_WIDTH_IN_CELLS; i++) {
+  for(var i = 0; i < GRID_HEIGHT_IN_CELLS; i++) {
     var start_offset = CELL_SIZE_IN_PIXELS * i;
     var horizontalStartPoint = { x: 0, y: start_offset };
     var horizontalEndPoint = { x: gridWidth, y: start_offset };
@@ -92,12 +91,11 @@ var drawGrid = function drawGrid() {
   }
 }
 
-var draw = function draw(sim) {
-  drawGrid();
+var drawCells = function drawCells() {
   for(var i = 0; i < GRID_WIDTH_IN_CELLS; i++) {
     for(var j = 0; j < GRID_HEIGHT_IN_CELLS; j++) {
-      if(sim.is_cell_populated(i, j)) fillCell(i, j);
-      if(sim.is_cell_dead(i, j)) clearCell(i, j);
+      if(_simulation.is_cell_populated(i, j)) fillCell(i, j);
+      if(_simulation.is_cell_dead(i, j)) clearCell(i, j);
     }
   }
 }
@@ -132,6 +130,7 @@ var drawLine = function drawLine(startPoint, endPoint) {
 }
 
 var updateView = function updateView() {
-  draw(_simulation);
+  drawCells();
+  drawGrid();
   updateStatus();
 }

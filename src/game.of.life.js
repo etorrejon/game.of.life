@@ -19,9 +19,7 @@ $('#game_of_life').mousedown(function(e) {
 });
 
 $("#start_button").click(function () {
-  _intervalId = window.setInterval(function() {
-                  nextTick();
-                }, 1000);
+  _intervalId = window.setInterval(function() { nextTick(); }, 1000);
 });
 
 $("#pause_button").click(function() {
@@ -47,7 +45,7 @@ function windowToCellCoordinates(x, y) {
   var canvas_y = y - bounding_box.top * (_canvas.height / bounding_box.height);
   var cell_y = Math.floor( ( canvas_y / CELL_SIZE_IN_PIXELS ) - 0.5 );
 
-  return {x: cell_x, y: cell_y };
+  return { x: cell_x, y: cell_y };
 }
 
 var prepareSimulation = function prepareSimulation() {

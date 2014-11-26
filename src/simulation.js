@@ -51,9 +51,7 @@ var simulation = function() {
   }
 
   that.reset = function() {
-    tick_count = 0;
-    population = [];
-    initialize_grid();
+    initialize();
   };
 
   that.kill_cell = function(x, y) {
@@ -96,13 +94,13 @@ var simulation = function() {
   }
 
   // :: helper functions ::
-  function intialize() {
+  var initialize = function initialize() {
     tick_count = 0;
     population = [];
     initialize_grid();
   }
 
-  function initialize_grid() {
+  var initialize_grid = function initialize_grid() {
     population_grid = Array.matrix(80, 80, null);
 
     for(var i = 0; i < population_grid.length; i++) {
@@ -113,7 +111,7 @@ var simulation = function() {
     }
   }
 
-  function cell_should_live(c) {
+  var cell_should_live = function cell_should_live(c) {
     var neighbour_count = 0;
     if(has_left_neighbour(c)) neighbour_count += 1;
     if(has_right_neighbour(c)) neighbour_count += 1;
@@ -130,59 +128,59 @@ var simulation = function() {
     return neighbour_count >= 2;
   }
 
-  function has_top_left_neighbour(c) {
+  var has_top_left_neighbour = function has_top_left_neighbour(c) {
     if(c.y() == 0) return false;
     if(c.x() == 0) return false;
     var neighbour = population_grid[c.x() - 1][c.y() - 1];
     return neighbour.is_alive();
   }
 
-  function has_top_right_neighbour(c) {
+  var has_top_right_neighbour = function has_top_right_neighbour(c) {
     if(c.y() == 0) return false;
     if(c.x() >= population_grid.length - 1) return false;
     var neighbour = population_grid[c.x() + 1][c.y() - 1];
     return neighbour.is_alive();
   }
 
-  function has_bottom_left_neighbour(c) {
+  var has_bottom_left_neighbour = function has_bottom_left_neighbour(c) {
     if(c.y() >= population_grid[0].length - 1) return false;
     if(c.x() == 0) return false;
     var neighbour = population_grid[c.x() - 1][c.y() + 1];
     return neighbour.is_alive();
   }
 
-  function has_bottom_right_neighbour(c) {
+  var has_bottom_right_neighbour = function has_bottom_right_neighbour(c) {
     if(c.y() >= population_grid[0].length - 1) return false;
     if(c.x() >= population_grid.length - 1) return false;
     var neighbour = population_grid[c.x() + 1][c.y() + 1];
     return neighbour.is_alive();
   }
 
-  function has_left_neighbour(c) {
+  var has_left_neighbour = function has_left_neighbour(c) {
     if(c.x() == 0) return false;
     var neighbour = population_grid[c.x() - 1][c.y()];
     return neighbour.is_alive();
   }
 
-  function has_right_neighbour(c) {
+  var has_right_neighbour = function has_right_neighbour(c) {
     if(c.x() >= population_grid.length - 1) return false;
     var neighbour = population_grid[c.x() + 1][c.y()];
     return neighbour.is_alive();
   }
 
-  function has_bottom_neighbour(c) {
+  var has_bottom_neighbour = function has_bottom_neighbour(c) {
     if(c.y() >= population_grid[0].length - 1) return false;
     var neighbour = population_grid[c.x()][c.y() + 1];
     return neighbour.is_alive();
   }
   
-  function has_top_neighbour(c) {
+  var has_top_neighbour = function has_top_neighbour(c) {
     if(c.y() == 0) return false;
     var neighbour = population_grid[c.x()][c.y() - 1];
     return neighbour.is_alive();
   }
 
-  function print_world() {
+  var print_world = function print_world() {
     console.log('------------------the world----------------------');
     console.log('tick: {t}'
                 .supplant({t: tick_count}));
@@ -199,7 +197,7 @@ var simulation = function() {
     console.log('------------------------------------------------');
   }
 
-  function print_neighbours(c) {
+  var print_neighbours = function print_neighbours(c) {
     console.log('has left neighbour? {v}'
                 .supplant({v: has_left_neighbour(c).toString()}));
     console.log('has right neighbour? {v}'
@@ -210,7 +208,7 @@ var simulation = function() {
                 .supplant({v: has_top_neighbour(c).toString()}));
   }
 
-  function print_cell(c) {
+  var print_cell = function print_cell(c) {
     console.log('cell ({x}, {y}) is alive? {a}'
                 .supplant({x: c.x(), y: c.y(), a: c.is_alive().toString()}));
   }

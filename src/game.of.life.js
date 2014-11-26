@@ -6,6 +6,7 @@ var GRID_HEIGHT_IN_CELLS = 80;
 var _canvas;
 var _context;
 var _simulation;
+var _intervalId;
 
 $(function() {
   prepareSimulation();
@@ -14,22 +15,25 @@ $(function() {
 $('#game_of_life').mousedown(function(e) {
   var cellCoordinates = windowToCellCoordinates(e.pageX, e.pageY);
   _simulation.populate_cell(cellCoordinates.x, cellCoordinates.y);
-  draw(_simulation);
-  updateStatus();
+  updateView();
 });
 
-$("#tick_button").click(function () {
-  next_tick();
-  updateStatus();
+$("#start_button").click(function () {
+  _intervalId = window.setInterval(function() {
+                  nextTick();
+                }, 1000);
+});
+
+$("#pause_button").click(function() {
+  window.clearInterval(_intervalId);
 });
 
 $("#reset_button").click(function () {
   _simulation.reset();
-  draw(_simulation);
-  updateStatus();
+  updateView();
 });
 
-function updateStatus() {
+var updateStatus = function updateStatus() {
   $("#current_tick").html(_simulation.get_tick_count());
   $("#current_population").html(_simulation.get_population_size());
 }
@@ -46,23 +50,22 @@ function windowToCellCoordinates(x, y) {
   return {x: cell_x, y: cell_y };
 }
 
-function prepareSimulation() {
+var prepareSimulation = function prepareSimulation() {
   prepareCanvas();
-  drawGrid();
 
   _simulation = simulation();
   _simulation.debug();
 
-  draw(_simulation);
+  updateView();
 }
 
-function next_tick() {
+var nextTick = function nextTick() {
   _simulation.tick();
   _simulation.debug();
-  draw(_simulation);
+  updateView();
 }
 
-function prepareCanvas() {
+var prepareCanvas = function prepareCanvas() {
   _canvas = document.getElementById(CANVAS_ELEMENT_ID);
   _canvas.width = GRID_WIDTH_IN_CELLS * CELL_SIZE_IN_PIXELS;
   _canvas.height = GRID_HEIGHT_IN_CELLS * CELL_SIZE_IN_PIXELS;
@@ -72,7 +75,7 @@ function prepareCanvas() {
   _context.strokeStyle = "#eee";
 }
 
-function drawGrid() {
+var drawGrid = function drawGrid() {
   var gridWidth = GRID_WIDTH_IN_CELLS * CELL_SIZE_IN_PIXELS;
   var gridHeight = GRID_HEIGHT_IN_CELLS * CELL_SIZE_IN_PIXELS;
 
@@ -91,7 +94,7 @@ function drawGrid() {
   }
 }
 
-function draw(sim) {
+var draw = function draw(sim) {
   drawGrid();
   for(var i = 0; i < GRID_WIDTH_IN_CELLS; i++) {
     for(var j = 0; j < GRID_HEIGHT_IN_CELLS; j++) {
@@ -101,23 +104,23 @@ function draw(sim) {
   }
 }
 
-function fillCell(x, y) {
+var fillCell = function fillCell(x, y) {
   var xCoordinate = x * CELL_SIZE_IN_PIXELS;
   var yCoordinate = y * CELL_SIZE_IN_PIXELS;
   _context.fillRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
 }
 
-function clearCell(x, y) {
+var clearCell = function clearCell(x, y) {
   var xCoordinate = x * CELL_SIZE_IN_PIXELS;
   var yCoordinate = y * CELL_SIZE_IN_PIXELS;
   _context.clearRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
 }
 
-function log(message) {
+var log = function log(message) {
   $("#log").prepend( "<p>{m}</p>".supplant({m: message}) ); 
 }
 
-function drawLine(startPoint, endPoint) {
+var drawLine = function drawLine(startPoint, endPoint) {
   log("drawing line from ({x1}, {y1}) to ({x2}, {y2})".supplant({ x1: startPoint.x + 0.5, 
                                                                   y1: startPoint.y + 0.5, 
                                                                   x2: endPoint.x + 0.5, 
@@ -128,4 +131,9 @@ function drawLine(startPoint, endPoint) {
   _context.lineTo(endPoint.x, endPoint.y);
   _context.closePath();
   _context.stroke();
+}
+
+var updateView = function updateView() {
+  draw(_simulation);
+  updateStatus();
 }

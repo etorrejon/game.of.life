@@ -1,16 +1,18 @@
 var simulation = function(width, height) {
-  var that, tick_count, population, population_grid, grid_width, grid_height;
+  var that, tick_count, population, 
+      population_grid, grid_width, grid_height;
+
   that = this;
   tick_count = 0;
   population = [];
   grid_width = width;
   grid_height = height;
 
-  that.get_tick_count = function () {
+  that.tick_count = function () {
     return tick_count;
   };
 
-  that.get_population_size = function() {
+  that.population_size = function() {
     var live_count = 0;
     for(var i = 0; i < population.length; i++) {
       if(population[i] != null && population[i].is_alive()) {
@@ -20,7 +22,11 @@ var simulation = function(width, height) {
     return live_count;
   }
 
-  that.get_dead_cell_count = function() {
+  that.cell_age = function(x, y) {
+    return population_grid[x][y].age();
+  }
+
+  that.dead_cell_count = function() {
     var dead_count = 0;
     for(var i = 0; i < population.length; i++) {
       if(population[i] == null || !population[i].is_alive()) {
@@ -30,11 +36,11 @@ var simulation = function(width, height) {
     return dead_count;
   }
 
-  that.get_width = function() {
+  that.width = function() {
     return width;
   }
 
-  that.get_height = function() {
+  that.height = function() {
     return height;
   }
 
@@ -83,9 +89,11 @@ var simulation = function(width, height) {
     var to_resurrect = [];
 
     for(var i = 0; i < population.length; i++) {
-      if(cell_should_live(population[i])) {
+      population[i].tick();
+      var fate = decide_cell_fate(population[i]);
+      if(fate == 'resurrect') {
         to_resurrect.push(population[i]);
-      } else {
+      } else if(fate == 'die') {
         to_die.push(population[i]);
       }
     }
@@ -123,7 +131,7 @@ var simulation = function(width, height) {
     }
   }
 
-  var cell_should_live = function cell_should_live(c) {
+  var decide_cell_fate = function decide_cell_fate(c) {
     var neighbour_count = 0;
     if(has_left_neighbour(c)) neighbour_count += 1;
     if(has_right_neighbour(c)) neighbour_count += 1;
@@ -134,10 +142,10 @@ var simulation = function(width, height) {
     if(has_top_left_neighbour(c)) neighbour_count += 1;
     if(has_top_right_neighbour(c)) neighbour_count += 1;
 
-    if(!c.is_alive() && neighbour_count == 3) return true;
-    if(!c.is_alive()) return false;
-    if(neighbour_count > 3) return false;
-    return neighbour_count >= 2;
+    if(!c.is_alive() && neighbour_count == 3) return 'resurrect';
+    if(!c.is_alive()) return 'die';
+    if(neighbour_count > 3) return 'die';
+    return neighbour_count >= 2 ? 'live' : 'die';
   }
 
   var has_top_left_neighbour = function has_top_left_neighbour(c) {
@@ -197,7 +205,7 @@ var simulation = function(width, height) {
     console.log('tick: {t}'
                 .supplant({t: tick_count}));
     console.log('population: {p}'
-                .supplant({p: get_population_size()}));
+                .supplant({p: population_size()}));
 
     for(var i = 0; i < population.length; i++) {
       var c = population[i];

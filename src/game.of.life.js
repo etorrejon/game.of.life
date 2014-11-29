@@ -2,6 +2,7 @@ var CANVAS_ELEMENT_ID = "game_of_life";
 var CELL_SIZE_IN_PIXELS = 10;
 var GRID_WIDTH_IN_CELLS = 80;
 var GRID_HEIGHT_IN_CELLS = 40;
+var CELL_AGE_COLOR_MULTIPLIER = 5;
 
 var _canvas;
 var _context;
@@ -32,8 +33,8 @@ $("#reset_button").click(function () {
 });
 
 var updateStatus = function updateStatus() {
-  $("#current_tick").html(_simulation.get_tick_count());
-  $("#current_population").html(_simulation.get_population_size());
+  $("#current_tick").html(_simulation.tick_count());
+  $("#current_population").html(_simulation.population_size());
 }
 
 function windowToCellCoordinates(x, y) {
@@ -103,7 +104,15 @@ var drawCells = function drawCells() {
 var fillCell = function fillCell(x, y) {
   var xCoordinate = x * CELL_SIZE_IN_PIXELS;
   var yCoordinate = y * CELL_SIZE_IN_PIXELS;
+  var cell_age = _simulation.cell_age(x, y);
+  var r = (cell_age * CELL_AGE_COLOR_MULTIPLIER) % 255;
+  var g = (cell_age * CELL_AGE_COLOR_MULTIPLIER) % 255;
+  var b = 0;
+
+  _context.save();
+  _context.fillStyle = 'rgb({r}, {g}, {b})'.supplant({r: r, g: g, b: b});
   _context.fillRect(xCoordinate, yCoordinate, CELL_SIZE_IN_PIXELS, CELL_SIZE_IN_PIXELS);
+  _context.restore();
 }
 
 var clearCell = function clearCell(x, y) {

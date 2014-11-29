@@ -13,15 +13,26 @@ describe("A cell", function() {
     c.die();
 
     expect(c.is_alive()).toBe(false);
+    expect(c.age()).toBe(0);
   });
 
   it("Can resurrect", function() {
-    var c = cell();
+    var c = cell(0, 0);
     c.die();
 
     c.resurrect();
 
     expect(c.is_alive()).toBe(true);
+  });
+
+  it("Has an age of 0 after resurrection", function() {
+    var c = cell(0, 0);
+    c.tick();
+    c.die();
+
+    c.resurrect();
+
+    expect(c.age()).toBe(0);
   });
 
   it("Has an x value", function() {
@@ -45,5 +56,19 @@ describe("A cell", function() {
 
     expect(second.x()).toBe(6);
     expect(second.y()).toBe(7);
+  });
+
+  it("Has an age", function() {
+    var c = cell(1, 1);
+    
+    expect(c.age()).toBe(0);
+  });
+
+  it("Increases in age when ticked", function() {
+    var c = cell(1, 1);
+
+    c.tick();
+
+    expect(c.age()).toBe(1)
   });
 });

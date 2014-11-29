@@ -9,26 +9,26 @@ describe("A new simulation", function() {
 
     var sim = simulation(width, height);
 
-    expect(sim.get_width()).toBe(width);
-    expect(sim.get_height()).toBe(height);
+    expect(sim.width()).toBe(width);
+    expect(sim.height()).toBe(height);
   });
 
   it("Has an initial tick count of zero", function() {
     var sim = simulation(50, 50);
 
-    expect(sim.get_tick_count()).toBe(0);
+    expect(sim.tick_count()).toBe(0);
   });
 
   it("Has an initial population of zero", function() {
     var sim = simulation(50, 50);
 
-    expect(sim.get_population_size()).toBe(0);
+    expect(sim.population_size()).toBe(0);
   });
 
   it("Has only dead cells", function() {
     var sim = simulation(50, 50);
 
-    expect(sim.get_dead_cell_count()).toBe(50 * 50);
+    expect(sim.dead_cell_count()).toBe(50 * 50);
   });
 
   it("Accepts a seed", function() {
@@ -36,7 +36,7 @@ describe("A new simulation", function() {
 
     sim.seed([{x: 0, y:0}]);
 
-    expect(sim.get_population_size()).toBe(1);
+    expect(sim.population_size()).toBe(1);
   }); 
 
   it("Can populate a cell", function() {
@@ -44,7 +44,7 @@ describe("A new simulation", function() {
 
     sim.populate_cell(1, 1);
 
-    expect(sim.get_population_size()).toBe(1);
+    expect(sim.population_size()).toBe(1);
     expect(sim.is_cell_populated(1, 1)).toBe(true);
   });
 
@@ -53,7 +53,7 @@ describe("A new simulation", function() {
 
     sim.tick();
 
-    expect(sim.get_tick_count()).toBe(1);
+    expect(sim.tick_count()).toBe(1);
   });
 
   it("Can be reset", function() {
@@ -63,8 +63,8 @@ describe("A new simulation", function() {
 
     sim.reset();
 
-    expect(sim.get_tick_count()).toBe(0);
-    expect(sim.get_population_size()).toBe(0);
+    expect(sim.tick_count()).toBe(0);
+    expect(sim.population_size()).toBe(0);
   });
 
   it("Can distinguish a dead cell from an empty cell", function() {
@@ -90,7 +90,7 @@ describe("On simulation tick", function() {
     sim.seed([{x: 0, y:0}]);
     sim.tick();
 
-    expect(sim.get_population_size()).toBe(0);
+    expect(sim.population_size()).toBe(0);
   });
 
   it("Keeps track of dead cells", function() {
@@ -104,8 +104,8 @@ describe("On simulation tick", function() {
 
     sim.tick();
 
-    expect(sim.get_population_size()).toBe(0);
-    expect(sim.get_dead_cell_count()).toBe(width * height);
+    expect(sim.population_size()).toBe(0);
+    expect(sim.dead_cell_count()).toBe(width * height);
   }); 
 
   it("Causes any cell with no live neighbours to die", function() {
@@ -115,7 +115,7 @@ describe("On simulation tick", function() {
               {x: 4, y: 6}]);
     sim.tick();
 
-    expect(sim.get_population_size()).toBe(0);
+    expect(sim.population_size()).toBe(0);
   });
 
   it("Causes a cell with only one live neighbour to die", function() {
@@ -124,7 +124,7 @@ describe("On simulation tick", function() {
     
     sim.tick();
 
-    expect(sim.get_population_size()).toBe(0);
+    expect(sim.population_size()).toBe(0);
   });
 
   it("Allows a cell with two live neighbours to survive", function() {
@@ -136,7 +136,7 @@ describe("On simulation tick", function() {
 
     sim.tick();
 
-    expect(sim.get_population_size()).toBe(1);
+    expect(sim.population_size()).toBe(1);
     expect(sim.is_cell_populated(survivor.x, survivor.y)).toBe(true);
   });
 
@@ -149,7 +149,7 @@ describe("On simulation tick", function() {
 
     sim.tick();
 
-    expect(sim.get_population_size()).toBe(1);
+    expect(sim.population_size()).toBe(1);
     expect(sim.is_cell_populated(survivor.x, survivor.y)).toBe(true);
   });
 
@@ -182,6 +182,23 @@ describe("On simulation tick", function() {
     expect(sim.is_cell_populated(zombie_cell.x, zombie_cell.y)).toBe(true);
   });
 
+  it("Increments the age of cells that are alive", function() {
+    var blockOfFour = [{x: 2, y: 2}, 
+                       {x: 2, y: 3}, 
+                       {x: 3, y: 2}, 
+                       {x: 3, y: 3}];
+
+    var sim = simulation(50, 50);
+    sim.seed(blockOfFour);
+
+    sim.tick();
+
+    for(var i = 0; i < blockOfFour.length; i++) {
+      var cell = blockOfFour[i];
+      expect(sim.cell_age(cell.x, cell.y)).toBe(1);
+    }
+  });
+
 
   it("A block of four squares is a still life", function() {
     var seed = [{x: 2, y: 2}, 
@@ -194,7 +211,7 @@ describe("On simulation tick", function() {
     sim.tick();
     sim.tick();
 
-    expect(sim.get_population_size()).toBe(4);
+    expect(sim.population_size()).toBe(4);
     assert_cells_are_visible(sim, seed);
   });
 
@@ -211,7 +228,7 @@ describe("On simulation tick", function() {
     sim.tick();
     sim.tick();
 
-    expect(sim.get_population_size()).toBe(6);
+    expect(sim.population_size()).toBe(6);
     assert_cells_are_visible(sim, seed);
   });
 
@@ -230,7 +247,7 @@ describe("On simulation tick", function() {
       sim.tick();
     }
 
-    expect(sim.get_population_size()).toBe(6);
+    expect(sim.population_size()).toBe(6);
     assert_cells_are_visible(sim, seed);
   });
 

@@ -4,14 +4,12 @@
   "description": "Conway's Game of Life",
   "main": "game.of.life.js",
   "scripts": {
-    "test": "./node_modules/jasmine-node/bin/jasmine-node --verbose tests",
-    "autotest": "./node_modules/jasmine-node/bin/jasmine-node --verbose --autotest tests"
+    "test": "node test/runner.js"
   },
   "author": "Eddie Torrejon",
   "license": "Creative Commons Attribution-Share Alike 4.0",
   "devDependencies": {
-    "jasmine": "*",
-    "jasmine-node": "*"
+    "mocha": "*"
   },
   "dependencies": {
     "requirejs": "*"

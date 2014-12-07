@@ -1,6 +1,9 @@
-eval(require('fs').readFileSync('src/scripts/utilities.js','utf8'));
-eval(require('fs').readFileSync('src/scripts/cell.js','utf8'));
-eval(require('fs').readFileSync('src/scripts/world.js','utf8'));
+var requirejs = require('requirejs');
+var assert = requirejs('assert');
+
+var cell = requirejs('lib/cell');
+var utilities = requirejs('lib/utilities');
+var world = requirejs('lib/world');
 
 describe("A new world", function() {
   it("Accepts grid dimensions", function() {
@@ -9,27 +12,26 @@ describe("A new world", function() {
 
     var w = world(width, height);
 
-    expect(w.width()).toBe(width);
-    expect(w.height()).toBe(height);
+    assert.equal(width, w.width());
+    assert.equal(height, w.height());
   });
 
   it("Has an initial tick count of zero", function() {
     var w = world(50, 50);
 
-
-    expect(w.tickCount()).toBe(0);
+    assert.equal(0, w.tickCount());
   });
 
   it("Has an initial population of zero", function() {
     var w = world(50, 50);
 
-    expect(w.populationSize()).toBe(0);
+    assert.equal(0, w.populationSize());
   });
 
   it("Has only dead cells", function() {
     var w = world(50, 50);
 
-    expect(w.deadCellCount()).toBe(50 * 50);
+    assert.equal(50 * 50, w.deadCellCount());
   });
 
   it("Accepts a seed", function() {
@@ -37,7 +39,7 @@ describe("A new world", function() {
 
     w.seed([{x: 0, y:0}]);
 
-    expect(w.populationSize()).toBe(1);
+    assert.equal(1, w.populationSize());
   }); 
 
   it("Can populate a cell", function() {
@@ -45,8 +47,8 @@ describe("A new world", function() {
 
     w.populateCell(1, 1);
 
-    expect(w.populationSize()).toBe(1);
-    expect(w.isCellPopulated(1, 1)).toBe(true);
+    assert.equal(1, w.populationSize());
+    assert.equal(true, w.isCellPopulated(1, 1));
   });
 
   it("Can tick", function() {
@@ -54,7 +56,7 @@ describe("A new world", function() {
 
     w.tick();
 
-    expect(w.tickCount()).toBe(1);
+    assert.equal(1, w.tickCount());
   });
 
   it("Can be reset", function() {
@@ -64,34 +66,34 @@ describe("A new world", function() {
 
     w.reset();
 
-    expect(w.tickCount()).toBe(0);
-    expect(w.populationSize()).toBe(0);
+    assert.equal(0, w.tickCount());
+    assert.equal(0, w.populationSize());
   });
 
   it("Can distinguish a dead cell from an empty cell", function() {
     var w = world(50, 50);
     w.seed([{x: 0, y: 0},
-                {x: 1, y: 1}]);
+            {x: 1, y: 1}]);
 
     w.killCell(1, 1);
 
-    expect(w.isCellPopulated(0, 0)).toBe(true);
-    expect(w.isCellDead(0, 0)).toBe(false);
-    expect(w.isCellEmpty(0, 0)).toBe(false);
-    expect(w.isCellPopulated(1, 1)).toBe(false);
-    expect(w.isCellDead(1, 1)).toBe(true);
-    expect(w.isCellEmpty(1, 1)).toBe(false);
-    expect(w.isCellEmpty(2, 2)).toBe(false);
+    assert.equal(true, w.isCellPopulated(0, 0));
+    assert.equal(false, w.isCellDead(0, 0));
+    assert.equal(false, w.isCellEmpty(0, 0));
+    assert.equal(false, w.isCellPopulated(1, 1));
+    assert.equal(true, w.isCellDead(1, 1));
+    assert.equal(false, w.isCellEmpty(1, 1));
+    assert.equal(false, w.isCellEmpty(2, 2));
   });
 });
 
-describe("On simulation tick", function() {
+describe("A tick", function() {
   it("Causes a solitary cell to die", function() {
     var w = world(50, 50);
     w.seed([{x: 0, y:0}]);
     w.tick();
 
-    expect(w.populationSize()).toBe(0);
+    assert.equal(0, w.populationSize());
   });
 
   it("Keeps track of dead cells", function() {
@@ -105,8 +107,8 @@ describe("On simulation tick", function() {
 
     w.tick();
 
-    expect(w.populationSize()).toBe(0);
-    expect(w.deadCellCount()).toBe(width * height);
+    assert.equal(0, w.populationSize());
+    assert.equal(width * height, w.deadCellCount());
   }); 
 
   it("Causes any cell with no live neighbours to die", function() {
@@ -116,7 +118,7 @@ describe("On simulation tick", function() {
                 {x: 4, y: 6}]);
     w.tick();
 
-    expect(w.populationSize()).toBe(0);
+    assert.equal(0, w.populationSize());
   });
 
   it("Causes a cell with only one live neighbour to die", function() {
@@ -125,7 +127,7 @@ describe("On simulation tick", function() {
     
     w.tick();
 
-    expect(w.populationSize()).toBe(0);
+    assert.equal(0, w.populationSize());
   });
 
   it("Allows a cell with two live neighbours to survive", function() {
@@ -137,8 +139,8 @@ describe("On simulation tick", function() {
 
     w.tick();
 
-    expect(w.populationSize()).toBe(1);
-    expect(w.isCellPopulated(survivor.x, survivor.y)).toBe(true);
+    assert.equal(1, w.populationSize());
+    assert.equal(true, w.isCellPopulated(survivor.x, survivor.y));
   });
 
   it("Allows a cell with two live diagonal neighbours to survive", function() {
@@ -150,8 +152,8 @@ describe("On simulation tick", function() {
 
     w.tick();
 
-    expect(w.populationSize()).toBe(1);
-    expect(w.isCellPopulated(survivor.x, survivor.y)).toBe(true);
+    assert.equal(1, w.populationSize());
+    assert.equal(true, w.isCellPopulated(survivor.x, survivor.y));
   });
 
   it("Causes a cell with more than three live neighbours to die", function() {
@@ -165,7 +167,7 @@ describe("On simulation tick", function() {
 
     w.tick();
 
-    expect(w.isCellPopulated(will_die.x, will_die.y)).toBe(false);
+    assert.equal(false, w.isCellPopulated(will_die.x, will_die.y));
   });
 
   it("Causes a dead cell with three live neighbours to come back to life", function() {
@@ -180,7 +182,7 @@ describe("On simulation tick", function() {
 
     w.tick();
 
-    expect(w.isCellPopulated(zombie_cell.x, zombie_cell.y)).toBe(true);
+    assert.equal(true, w.isCellPopulated(zombie_cell.x, zombie_cell.y));
   });
 
   it("Increments the age of cells that are alive", function() {
@@ -196,7 +198,7 @@ describe("On simulation tick", function() {
 
     for(var i = 0; i < blockOfFour.length; i++) {
       var cell = blockOfFour[i];
-      expect(w.cellAge(cell.x, cell.y)).toBe(1);
+      assert.equal(1, w.cellAge(cell.x, cell.y));
     }
   });
 
@@ -212,7 +214,7 @@ describe("On simulation tick", function() {
     w.tick();
     w.tick();
 
-    expect(w.populationSize()).toBe(4);
+    assert.equal(4, w.populationSize());
     assertCellsAreVisible(w, seed);
   });
 
@@ -229,7 +231,7 @@ describe("On simulation tick", function() {
     w.tick();
     w.tick();
 
-    expect(w.populationSize()).toBe(6);
+    assert.equal(6, w.populationSize());
     assertCellsAreVisible(w, seed);
   });
 
@@ -248,7 +250,7 @@ describe("On simulation tick", function() {
       w.tick();
     }
 
-    expect(w.populationSize()).toBe(6);
+    assert.equal(6, w.populationSize());
     assertCellsAreVisible(w, seed);
   });
   
@@ -256,6 +258,6 @@ describe("On simulation tick", function() {
 
 function assertCellsAreVisible(aWorld, cells) {
   for(var i = 0; i < cells.length; i++) {
-    expect(aWorld.isCellPopulated(cells[i].x, cells[i].y)).toBe(true);
+    assert.equal(true, aWorld.isCellPopulated(cells[i].x, cells[i].y));
   }
 }

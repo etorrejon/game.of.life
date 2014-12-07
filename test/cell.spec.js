@@ -1,19 +1,20 @@
-eval(require('fs').readFileSync('src/scripts/utilities.js','utf8'));
-eval(require('fs').readFileSync('src/scripts/cell.js','utf8'));
+var requirejs = require('requirejs');
+var assert = requirejs('assert');
+var cell = requirejs('lib/cell');
 
 describe("A cell", function() {
   it("Is alive", function() {
     var c = cell();
 
-    expect(c.isAlive()).toBe(true);
+    assert.equal(true, c.isAlive());
   });
 
   it("Can die", function() {
     var c = cell();
     c.die();
 
-    expect(c.isAlive()).toBe(false);
-    expect(c.age()).toBe(0);
+    assert.equal(false, c.isAlive());
+    assert.equal(0, c.age());
   });
 
   it("Can resurrect", function() {
@@ -22,7 +23,7 @@ describe("A cell", function() {
 
     c.resurrect();
 
-    expect(c.isAlive()).toBe(true);
+    assert.equal(true, c.isAlive());
   });
 
   it("Has an age of 0 after resurrection", function() {
@@ -32,36 +33,36 @@ describe("A cell", function() {
 
     c.resurrect();
 
-    expect(c.age()).toBe(0);
+    assert.equal(0, c.age());
   });
 
   it("Has an x value", function() {
     var c = cell(2, 3);
     
-    expect(c.x()).toBe(2);
+    assert.equal(2, c.x());
   });
 
   it("Has a y value", function() {
     var c = cell(4, 5);
     
-    expect(c.y()).toBe(5);
+    assert.equal(5, c.y());
   });
 
   it("Has it's own identity", function() {
     var first = cell(4, 5);
     var second = cell(6, 7);
   
-    expect(first.x()).toBe(4);
-    expect(first.y()).toBe(5);
+    assert.equal(4, first.x());
+    assert.equal(5, first.y());
 
-    expect(second.x()).toBe(6);
-    expect(second.y()).toBe(7);
+    assert.equal(6, second.x());
+    assert.equal(7, second.y());
   });
 
   it("Has an age", function() {
     var c = cell(1, 1);
     
-    expect(c.age()).toBe(0);
+    assert.equal(0, c.age());
   });
 
   it("Increases in age when ticked", function() {
@@ -69,6 +70,6 @@ describe("A cell", function() {
 
     c.tick();
 
-    expect(c.age()).toBe(1)
+    assert.equal(1, c.age());
   });
 });

@@ -6,6 +6,7 @@ function($, utilities, world) {
     var GRID_WIDTH_IN_CELLS = 80;
     var GRID_HEIGHT_IN_CELLS = 40;
     var CELL_AGE_COLOR_MULTIPLIER = 5;
+    var TICK_INTERVAL_IN_MS = 100;
 
     var canvas;
     var context;
@@ -19,7 +20,7 @@ function($, utilities, world) {
     });
 
     $("#start_button").click(function () {
-      intervalId = window.setInterval(function() { nextTick(); }, 100);
+      intervalId = window.setInterval(function() { nextTick(); }, TICK_INTERVAL_IN_MS);
     });
 
     $("#pause_button").click(function () {

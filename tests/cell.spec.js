@@ -1,18 +1,18 @@
-eval(require('fs').readFileSync('src/utilities.js','utf8'));
-eval(require('fs').readFileSync('src/cell.js','utf8'));
+eval(require('fs').readFileSync('src/scripts/utilities.js','utf8'));
+eval(require('fs').readFileSync('src/scripts/cell.js','utf8'));
 
 describe("A cell", function() {
   it("Is alive", function() {
     var c = cell();
 
-    expect(c.is_alive()).toBe(true);
+    expect(c.isAlive()).toBe(true);
   });
 
   it("Can die", function() {
     var c = cell();
     c.die();
 
-    expect(c.is_alive()).toBe(false);
+    expect(c.isAlive()).toBe(false);
     expect(c.age()).toBe(0);
   });
 
@@ -22,7 +22,7 @@ describe("A cell", function() {
 
     c.resurrect();
 
-    expect(c.is_alive()).toBe(true);
+    expect(c.isAlive()).toBe(true);
   });
 
   it("Has an age of 0 after resurrection", function() {

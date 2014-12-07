@@ -1,4 +1,4 @@
-var simulation = function(width, height) {
+var world = function(width, height) {
   var that, tick_count, population, 
       population_grid, grid_width, grid_height;
 
@@ -8,28 +8,28 @@ var simulation = function(width, height) {
   grid_width = width;
   grid_height = height;
 
-  that.tick_count = function () {
+  that.tickCount = function () {
     return tick_count;
   };
 
-  that.population_size = function() {
+  that.populationSize = function() {
     var live_count = 0;
     for(var i = 0; i < population.length; i++) {
-      if(population[i] != null && population[i].is_alive()) {
+      if(population[i] != null && population[i].isAlive()) {
         live_count += 1;
       }
     }
     return live_count;
   }
 
-  that.cell_age = function(x, y) {
+  that.cellAge = function(x, y) {
     return population_grid[x][y].age();
   }
 
-  that.dead_cell_count = function() {
+  that.deadCellCount = function() {
     var dead_count = 0;
     for(var i = 0; i < population.length; i++) {
-      if(population[i] == null || !population[i].is_alive()) {
+      if(population[i] == null || !population[i].isAlive()) {
         dead_count += 1;
       }
     }
@@ -44,26 +44,26 @@ var simulation = function(width, height) {
     return height;
   }
 
-  that.is_cell_dead = function(x, y) {
+  that.isCellDead = function(x, y) {
     return population_grid[x][y] != null &&
-           !population_grid[x][y].is_alive();
+           !population_grid[x][y].isAlive();
   }
 
-  that.is_cell_empty = function(x, y) {
+  that.isCellEmpty = function(x, y) {
     return population_grid[x][y] == null;
   }
 
-  that.is_cell_populated = function(x, y) {
+  that.isCellPopulated = function(x, y) {
     return population_grid[x][y] != null &&
-           population_grid[x][y].is_alive();
+           population_grid[x][y].isAlive();
   }
 
-  that.populate_cell = function(x, y) {
-    if(is_cell_empty(x, y)) {
+  that.populateCell = function(x, y) {
+    if(isCellEmpty(x, y)) {
       var new_cell = cell(x, y);
       population_grid[x][y] = new_cell;
       population.push(new_cell);
-    } else if(is_cell_dead(x, y)) {
+    } else if(isCellDead(x, y)) {
       population_grid[x][y].resurrect();
     }
   }
@@ -72,7 +72,7 @@ var simulation = function(width, height) {
     initialize();
   };
 
-  that.kill_cell = function(x, y) {
+  that.killCell = function(x, y) {
     population_grid[x][y].die();
   }
 
@@ -90,7 +90,7 @@ var simulation = function(width, height) {
 
     for(var i = 0; i < population.length; i++) {
       population[i].tick();
-      var fate = decide_cell_fate(population[i]);
+      var fate = decideCellFate(population[i]);
       if(fate == 'resurrect') {
         to_resurrect.push(population[i]);
       } else if(fate == 'die') {
@@ -110,131 +110,131 @@ var simulation = function(width, height) {
   }
 
   that.debug = function() {
-    print_world();
+    printWorld();
   }
 
   // :: helper functions ::
   var initialize = function initialize() {
     tick_count = 0;
     population = [];
-    initialize_grid();
+    initializeGrid();
   }
 
-  var initialize_grid = function initialize_grid() {
+  var initializeGrid = function initializeGrid() {
     population_grid = Array.matrix(grid_width, grid_height, null);
 
     for(var i = 0; i < population_grid.length; i++) {
       for(var j = 0; j < population_grid[0].length; j++) {
-        populate_cell(i, j);
-        kill_cell(i, j);
+        populateCell(i, j);
+        killCell(i, j);
       }
     }
   }
 
-  var decide_cell_fate = function decide_cell_fate(c) {
+  var decideCellFate = function decideCellFate(c) {
     var neighbour_count = 0;
-    if(has_left_neighbour(c)) neighbour_count += 1;
-    if(has_right_neighbour(c)) neighbour_count += 1;
-    if(has_top_neighbour(c)) neighbour_count += 1;
-    if(has_bottom_neighbour(c)) neighbour_count += 1;
-    if(has_bottom_left_neighbour(c)) neighbour_count += 1;
-    if(has_bottom_right_neighbour(c)) neighbour_count += 1;
-    if(has_top_left_neighbour(c)) neighbour_count += 1;
-    if(has_top_right_neighbour(c)) neighbour_count += 1;
+    if(hasLeftNeighbour(c)) neighbour_count += 1;
+    if(hasRightNeighbour(c)) neighbour_count += 1;
+    if(hasTopNeighbour(c)) neighbour_count += 1;
+    if(hasBottomNeighbour(c)) neighbour_count += 1;
+    if(hasBottomLeftNeighbour(c)) neighbour_count += 1;
+    if(hasBottomRightNeighbour(c)) neighbour_count += 1;
+    if(hasTopLeftNeighbour(c)) neighbour_count += 1;
+    if(hasTopRightNeighbour(c)) neighbour_count += 1;
 
-    if(!c.is_alive() && neighbour_count == 3) return 'resurrect';
-    if(!c.is_alive()) return 'die';
+    if(!c.isAlive() && neighbour_count == 3) return 'resurrect';
+    if(!c.isAlive()) return 'die';
     if(neighbour_count > 3) return 'die';
     return neighbour_count >= 2 ? 'live' : 'die';
   }
 
-  var has_top_left_neighbour = function has_top_left_neighbour(c) {
+  var hasTopLeftNeighbour = function hasTopLeftNeighbour(c) {
     if(c.y() == 0) return false;
     if(c.x() == 0) return false;
     var neighbour = population_grid[c.x() - 1][c.y() - 1];
-    return neighbour.is_alive();
+    return neighbour.isAlive();
   }
 
-  var has_top_right_neighbour = function has_top_right_neighbour(c) {
+  var hasTopRightNeighbour = function hasTopRightNeighbour(c) {
     if(c.y() == 0) return false;
     if(c.x() >= population_grid.length - 1) return false;
     var neighbour = population_grid[c.x() + 1][c.y() - 1];
-    return neighbour.is_alive();
+    return neighbour.isAlive();
   }
 
-  var has_bottom_left_neighbour = function has_bottom_left_neighbour(c) {
+  var hasBottomLeftNeighbour = function hasBottomLeftNeighbour(c) {
     if(c.y() >= population_grid[0].length - 1) return false;
     if(c.x() == 0) return false;
     var neighbour = population_grid[c.x() - 1][c.y() + 1];
-    return neighbour.is_alive();
+    return neighbour.isAlive();
   }
 
-  var has_bottom_right_neighbour = function has_bottom_right_neighbour(c) {
+  var hasBottomRightNeighbour = function hasBottomRightNeighbour(c) {
     if(c.y() >= population_grid[0].length - 1) return false;
     if(c.x() >= population_grid.length - 1) return false;
     var neighbour = population_grid[c.x() + 1][c.y() + 1];
-    return neighbour.is_alive();
+    return neighbour.isAlive();
   }
 
-  var has_left_neighbour = function has_left_neighbour(c) {
+  var hasLeftNeighbour = function hasLeftNeighbour(c) {
     if(c.x() == 0) return false;
     var neighbour = population_grid[c.x() - 1][c.y()];
-    return neighbour.is_alive();
+    return neighbour.isAlive();
   }
 
-  var has_right_neighbour = function has_right_neighbour(c) {
+  var hasRightNeighbour = function hasRightNeighbour(c) {
     if(c.x() >= population_grid.length - 1) return false;
     var neighbour = population_grid[c.x() + 1][c.y()];
-    return neighbour.is_alive();
+    return neighbour.isAlive();
   }
 
-  var has_bottom_neighbour = function has_bottom_neighbour(c) {
+  var hasBottomNeighbour = function hasBottomNeighbour(c) {
     if(c.y() >= population_grid[0].length - 1) return false;
     var neighbour = population_grid[c.x()][c.y() + 1];
-    return neighbour.is_alive();
+    return neighbour.isAlive();
   }
   
-  var has_top_neighbour = function has_top_neighbour(c) {
+  var hasTopNeighbour = function hasTopNeighbour(c) {
     if(c.y() == 0) return false;
     var neighbour = population_grid[c.x()][c.y() - 1];
-    return neighbour.is_alive();
+    return neighbour.isAlive();
   }
 
-  var print_world = function print_world() {
+  var printWorld = function printWorld() {
     console.log('------------------the world----------------------');
     console.log('tick: {t}'
                 .supplant({t: tick_count}));
     console.log('population: {p}'
-                .supplant({p: population_size()}));
+                .supplant({p: populationSize()}));
 
     for(var i = 0; i < population.length; i++) {
       var c = population[i];
-      if(c.is_alive()) {
-        print_cell(c);
+      if(c.isAlive()) {
+        printCell(c);
       }
     }
 
     console.log('------------------------------------------------');
   }
 
-  var print_neighbours = function print_neighbours(c) {
+  var printNeighbours = function printNeighbours(c) {
     console.log('has left neighbour? {v}'
-                .supplant({v: has_left_neighbour(c).toString()}));
+                .supplant({v: hasLeftNeighbour(c).toString()}));
     console.log('has right neighbour? {v}'
-                .supplant({v: has_right_neighbour(c).toString()}));
+                .supplant({v: hasRightNeighbour(c).toString()}));
     console.log('has bottom neighbour? {v}'
-                .supplant({v: has_bottom_neighbour(c).toString()}));
+                .supplant({v: hasBottomNeighbour(c).toString()}));
     console.log('has top neighbour? {v}'
-                .supplant({v: has_top_neighbour(c).toString()}));
+                .supplant({v: hasTopNeighbour(c).toString()}));
   }
 
-  var print_cell = function print_cell(c) {
+  var printCell = function printCell(c) {
     console.log('cell ({x}, {y}) is alive? {a}'
-                .supplant({x: c.x(), y: c.y(), a: c.is_alive().toString()}));
+                .supplant({x: c.x(), y: c.y(), a: c.isAlive().toString()}));
   }
 
   // :: initialize state ::
-  initialize_grid();
+  initializeGrid();
 
   return that;
 }

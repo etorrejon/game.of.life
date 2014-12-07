@@ -14,7 +14,7 @@ var cell = function(x, y) {
     is_alive = false;
   }
 
-  that.is_alive = function() {
+  that.isAlive = function() {
     return is_alive;
   }
 

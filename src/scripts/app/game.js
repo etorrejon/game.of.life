@@ -17,20 +17,20 @@ function($, utilities, world) {
         var cellCoordinates = windowToCellCoordinates(e.pageX, e.pageY);
         theWorld.populateCell(cellCoordinates.x, cellCoordinates.y);
         updateView();
-        });
+    });
 
     $("#start_button").click(function () {
-            intervalId = window.setInterval(function() { nextTick(); }, TICK_INTERVAL_IN_MS);
-            });
+        intervalId = window.setInterval(function() { nextTick(); }, TICK_INTERVAL_IN_MS);
+    });
 
     $("#pause_button").click(function () {
-            window.clearInterval(intervalId);
-            });
+        window.clearInterval(intervalId);
+    });
 
     $("#reset_button").click(function () {
-            theWorld.reset();
-            updateView();
-            });
+        theWorld.reset();
+        updateView();
+    });
 
     var prepareWorld = function () {
         theWorld = world(GRID_WIDTH_IN_CELLS, GRID_HEIGHT_IN_CELLS);

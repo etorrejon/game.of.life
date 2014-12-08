@@ -4,7 +4,4 @@ require.config({
     }
 });
 
-
-require(['app/game'],
-function() {
-});
+require(['app/game'], function() {});

@@ -4,12 +4,14 @@
   "description": "Conway's Game of Life",
   "main": "game.of.life.js",
   "scripts": {
-    "test": "node test/runner.js"
+    "test": "node test/runner.js",
+    "httpserver": "http-server ./src"
   },
   "author": "Eddie Torrejon",
   "license": "Creative Commons Attribution-Share Alike 4.0",
   "devDependencies": {
-    "mocha": "*"
+    "mocha": "*",
+    "http-server": "*"
   },
   "dependencies": {
     "requirejs": "*"

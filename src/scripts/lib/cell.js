@@ -1,3 +1,5 @@
+"use strict";
+
 define(function() {
     return function cell(x, y) {
         var that, x_pos, y_pos, is_alive, age;

@@ -10,32 +10,32 @@ describe("A new world", function() {
     var width = 50;
     var height = 80;
 
-    var w = world(width, height);
+    var w = new world(width, height);
 
     assert.equal(width, w.width());
     assert.equal(height, w.height());
   });
 
   it("Has an initial tick count of zero", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
 
     assert.equal(0, w.tickCount());
   });
 
   it("Has an initial population of zero", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
 
     assert.equal(0, w.populationSize());
   });
 
   it("Has only dead cells", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
 
     assert.equal(50 * 50, w.deadCellCount());
   });
 
   it("Accepts a seed", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
 
     w.seed([{x: 0, y:0}]);
 
@@ -43,7 +43,7 @@ describe("A new world", function() {
   }); 
 
   it("Can populate a cell", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
 
     w.populateCell(1, 1);
 
@@ -52,7 +52,7 @@ describe("A new world", function() {
   });
 
   it("Can tick", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
 
     w.tick();
 
@@ -60,7 +60,7 @@ describe("A new world", function() {
   });
 
   it("Can be reset", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
 
     w.populateCell(1, 1);
 
@@ -71,7 +71,7 @@ describe("A new world", function() {
   });
 
   it("Can distinguish a dead cell from an empty cell", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed([{x: 0, y: 0},
             {x: 1, y: 1}]);
 
@@ -89,7 +89,7 @@ describe("A new world", function() {
 
 describe("A tick", function() {
   it("Causes a solitary cell to die", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed([{x: 0, y:0}]);
     w.tick();
 
@@ -99,7 +99,7 @@ describe("A tick", function() {
   it("Keeps track of dead cells", function() {
     var width = 50;
     var height = 50;
-    var w = world(width, height);
+    var w = new world(width, height);
     var dead_cell_one = {x: 4, y: 4};
     var dead_cell_two = {x: 12, y: 1};
     var dead_cell_three = {x: 2, y: 2};
@@ -112,7 +112,7 @@ describe("A tick", function() {
   }); 
 
   it("Causes any cell with no live neighbours to die", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed([{x: 0, y: 0}, 
                 {x: 10, y: 10}, 
                 {x: 4, y: 6}]);
@@ -122,7 +122,7 @@ describe("A tick", function() {
   });
 
   it("Causes a cell with only one live neighbour to die", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed([{x: 0, y: 0}, {x: 0, y: 1}]);
     
     w.tick();
@@ -131,7 +131,7 @@ describe("A tick", function() {
   });
 
   it("Allows a cell with two live neighbours to survive", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
     var survivor = {x: 1, y: 1};
     w.seed([survivor, 
                 {x: 0, y: 0},
@@ -144,7 +144,7 @@ describe("A tick", function() {
   });
 
   it("Allows a cell with two live diagonal neighbours to survive", function() {
-    var w = world(50, 50);
+    var w = new world(50, 50);
     var survivor = {x: 2, y: 2};
     w.seed([survivor, 
                 {x: 3, y: 3},
@@ -158,7 +158,7 @@ describe("A tick", function() {
 
   it("Causes a cell with more than three live neighbours to die", function() {
     var will_die = {x: 1, y: 2};
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed([{x: 1, y: 1}, 
                 will_die, 
                 {x: 2, y: 1}, 
@@ -176,7 +176,7 @@ describe("A tick", function() {
                 {x: 0, y: 1}, 
                 zombie_cell, 
                 {x: 0, y: 2}];
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed(seed);
     w.killCell(zombie_cell.x, zombie_cell.y);
 
@@ -191,7 +191,7 @@ describe("A tick", function() {
                        {x: 3, y: 2}, 
                        {x: 3, y: 3}];
 
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed(blockOfFour);
 
     w.tick();
@@ -208,7 +208,7 @@ describe("A tick", function() {
                 {x: 2, y: 3}, 
                 {x: 3, y: 2}, 
                 {x: 3, y: 3}];
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed(seed);
 
     w.tick();
@@ -225,7 +225,7 @@ describe("A tick", function() {
                 {x: 4, y: 2}, 
                 {x: 2, y: 3}, 
                 {x: 3, y: 3}];
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed(seed);
 
     w.tick();
@@ -243,7 +243,7 @@ describe("A tick", function() {
                 {x: 2, y: 3}, 
                 {x: 3, y: 3}]
 
-    var w = world(50, 50);
+    var w = new world(50, 50);
     w.seed(seed);
 
     for(var i = 0; i < 100; i++) {

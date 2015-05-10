@@ -1,3 +1,5 @@
+"use strict";
+
 // supplant function taken from Douglas Crockford's "Remedial Javascript"
 // http://javascript.crockford.com/remedial.html
 if (!String.prototype.supplant) {
@@ -33,4 +35,3 @@ if (!Math.toRadians) {
     return deg * Math.PI / 180;
   };
 }
-

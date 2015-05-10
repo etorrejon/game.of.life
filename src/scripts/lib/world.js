@@ -1,3 +1,5 @@
+"use strict";
+
 define(['lib/cell', 'lib/utilities'],
 function(cell) {
     return function world(width, height) {
@@ -61,11 +63,11 @@ function(cell) {
       }
 
       that.populateCell = function(x, y) {
-        if(isCellEmpty(x, y)) {
+        if(that.isCellEmpty(x, y)) {
           var new_cell = cell(x, y);
           population_grid[x][y] = new_cell;
           population.push(new_cell);
-        } else if(isCellDead(x, y)) {
+        } else if(that.isCellDead(x, y)) {
           population_grid[x][y].resurrect();
         }
       }
@@ -127,8 +129,8 @@ function(cell) {
 
         for(var i = 0; i < population_grid.length; i++) {
           for(var j = 0; j < population_grid[0].length; j++) {
-            populateCell(i, j);
-            killCell(i, j);
+            that.populateCell(i, j);
+            that.killCell(i, j);
           }
         }
       }
